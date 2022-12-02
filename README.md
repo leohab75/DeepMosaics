@@ -119,6 +119,34 @@ python deepmosaic.py --media_path ./result/ruoruo_add.jpg --model_path ./pretrai
 
 If you see the error `Please check mosaic_position_model_path!`, check if there is a model file named `mosaic_position.pth` at `./pretrained_models/mosaic/mosaic_position.pth`
 
+#### LINUX based 
+я написал скрипт для нарезки видео по 10 мин и запуска отчистки мазаики
+
+I wrote a script to cut a video for 10 minutes and start cleaning the mosaic
+
+```bash 
+bash deep.sh
+```
+для справки 
+
+for reference
+
+опция **-с | --cut** нарежет видео, а **-r | --clean** включит виртуальное окружение и смонтирует [/mnt/ramdisk](https://ru.wikipedia.org/wiki/RAM-%D0%B4%D0%B8%D1%81%D0%BA)  на 8 GB 
+и запустит deepmosaic.py со следующими опциями:
+
+option **-c | --cut** will cut the video, and **-r | --clean** will enable the virtual environment and mount [/mnt/ramdisk](https://en.wikipedia.org/wiki/RAM_drive) to 8 GB
+and run deepmosaic.py with the following options:
+
+```bash
+python3 deepmosaic.py --media_path "$VIDEOPATH" --model_path './pretrained_models/mosaic/clean_youknow_video.pth' \
+      --result_dir 'result/' --temp_dir '/mnt/ramdisk' --gpu_id 0 --medfilt_num 9
+ ```
+посмотреть,на сколько загружен ramdisk 
+
+```bash 
+df -h | grep -i ramdisk
+```
+
 #### More Parameters
 
 If you want to test other images or videos, please refer to this file.<br>
