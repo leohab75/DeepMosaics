@@ -139,7 +139,7 @@ elif [[ $OPTION == "clean" ]]; then
     source mosaic/bin/activate
 
     python3 deepmosaic.py --media_path "$VIDEOPATH" --model_path './pretrained_models/mosaic/clean_youknow_video.pth' \
-      --result_dir '.result/' --temp_dir '/mnt/ramdisk' --gpu_id 0 --medfilt_num 9
+      --result_dir 'result/' --temp_dir '/mnt/ramdisk' --gpu_id 0 --medfilt_num 9
 
     sudo umount /mnt/ramdisk
     deactivate
