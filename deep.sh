@@ -5,8 +5,6 @@ export GREEN='\033[1;92m'
 export RED='\033[1;91m'
 export RESETCOLOR='\033[1;00m'
 
-
-
 #parse args
 POSITIONAL_ARGS=()
 if [[ -f $2 ]]; then
@@ -66,9 +64,9 @@ else
 
   echo -e "\t$RED PWD:$BLUE $(pwd)\n"
   echo -e "$GREEN Path:\n\t\t\t$RED result $BLUE"
-  for i in  result/*; do echo -e "\t$i"; done
+  for i in result/*; do echo -e "\t$i"; done
   echo -e "$GREEN Path:\n\t\t\t$RED cut_video $BLUE"
-  for i in  cut_video/*; do echo -e "\t$i"; done
+  for i in cut_video/*; do echo -e "\t$i"; done
   echo -e "\n $RESETCOLOR"
   exit 1
 
@@ -117,6 +115,8 @@ if [[ "$OPTION" == "cut" ]]; then
     if [[ $m -gt "50" ]]; then ffmpeg -i $VIDEOPATH -ss 0$hour:50:00 -t 00:10:00 -c copy cut_video/$i-$filename; fi
 
   done
+  echo -e "$GREEN Path:\n\t\t\t$RED cut_video $BLUE"
+  for i in cut_video/*; do echo -e "\t$i"; done
 
   echo -e "$GREEN\n all files to path $BLUE $(pwd)/cut_video \n$RESETCOLOR"
 
@@ -128,7 +128,7 @@ elif [[ $OPTION == "clean" ]]; then
     echo "mkdir /mnt/ramdisk"
   fi
 
-#8 gb is about 20 minutes of video, else close
+  #8 gb is about 20 minutes of video, else close
   if [[ $h == "00" && $m -lt 20 ]]; then
     start=$(date | awk '{print $5}')
 
@@ -147,9 +147,13 @@ elif [[ $OPTION == "clean" ]]; then
     echo -ne "\n$GREEN start: $RED$start"
     echo -ne "\t$BLUE stop: $RED$(date | awk '{print $5}') $RESETCOLOR\n"
 
+    echo -e "$GREEN Path:\n\t\t\t$RED result $BLUE"
+    for i in result/*; do echo -e "\t$i"; done
+
+    echo -e "\n $RESETCOLOR"
   else
 
-    echo -e "$REDERR: time video:$BLUE $time_video > 20m$RESETCOLOR"
+    echo -e "$RED ERR: time video:$BLUE $time_video > 20m$RESETCOLOR"
   fi
 fi
 
