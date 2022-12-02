@@ -124,6 +124,14 @@ If you see the error `Please check mosaic_position_model_path!`, check if there 
 
 I wrote a script to cut a video for 10 minutes and start cleaning the mosaic
 
+
+загрузка модели
+
+```bash
+pytho3 python3 download_mosaic.py
+```
+
+
 ```bash 
 bash deep.sh
 ```
@@ -138,7 +146,7 @@ option **-c | --cut** will cut the video, and **-r | --clean** will enable the v
 and run deepmosaic.py with the following options:
 
 ```bash
-python3 deepmosaic.py --media_path "$VIDEOPATH" --model_path './pretrained_models/mosaic/clean_youknow_video.pth' \
+python3 deepmosaic.py --media_path "$VIDEOPATH" --model_path 'pretrained_models/pretrained_models/mosaic/clean_youknow_video.pth' \
       --result_dir 'result/' --temp_dir '/mnt/ramdisk' --gpu_id 0 --medfilt_num 9
  ```
 посмотреть,на сколько загружен ramdisk 

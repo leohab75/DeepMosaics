@@ -138,8 +138,8 @@ elif [[ $OPTION == "clean" ]]; then
     virtualenv mosaic
     source mosaic/bin/activate
 
-    python3 deepmosaic.py --media_path "$VIDEOPATH" --model_path './pretrained_models/mosaic/clean_youknow_video.pth' \
-      --result_dir 'result/' --temp_dir '/mnt/ramdisk' --gpu_id 0 --medfilt_num 9
+    python3 deepmosaic.py --media_path "$VIDEOPATH" --model_path 'pretrained_models/pretrained_models/mosaic/clean_youknow_video.pth' \
+      --result_dir 'result/' --temp_dir '/mnt/ramdisk' --gpu_id 0 --medfilt_num 9  --no_preview
 
     sudo umount /mnt/ramdisk
     deactivate
