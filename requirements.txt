@@ -5,3 +5,4 @@ torch
 matplotlib
 tensorboardX
 scikit-image
+gdown
