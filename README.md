@@ -92,13 +92,13 @@ In order to add/remove mosaic, there must be a model file `mosaic_position.pth` 
 
 ```bash
 virtualenv mosaic
-source mosaic/bin/activate
+source mosaic/local/bin/activate
 ```
 
 Then install the dependencies
 
 ```bash
-pip install -r requirements.txt
+pip3 install -r requirements.txt
 ```
 
 If you can not build `scikit-image`, running `export CFLAGS='-Wno-implicit-function-declaration` then try to rebuild.
@@ -108,13 +108,13 @@ If you can not build `scikit-image`, running `export CFLAGS='-Wno-implicit-funct
 - Add Mosaic (output media will be saved in './result')<br>
 
 ```bash
-python deepmosaic.py --media_path ./imgs/ruoruo.jpg --model_path ./pretrained_models/mosaic/add_face.pth --gpu_id 0
+python3 deepmosaic.py --media_path ./imgs/ruoruo.jpg --model_path ./pretrained_models/mosaic/add_face.pth --gpu_id 0
 ```
 
 - Clean Mosaic (output media will save in './result')<br>
 
 ```bash
-python deepmosaic.py --media_path ./result/ruoruo_add.jpg --model_path ./pretrained_models/mosaic/clean_face_HD.pth --gpu_id 0
+python3 deepmosaic.py --media_path ./result/ruoruo_add.jpg --model_path ./pretrained_models/mosaic/clean_face_HD.pth --gpu_id 0
 ```
 
 If you see the error `Please check mosaic_position_model_path!`, check if there is a model file named `mosaic_position.pth` at `./pretrained_models/mosaic/mosaic_position.pth`
@@ -128,7 +128,7 @@ I wrote a script to cut a video for 10 minutes and start cleaning the mosaic
 загрузка модели
 
 ```bash
-pytho3 python3 download_mosaic.py
+python3 download_mosaic.py
 ```
 
 
