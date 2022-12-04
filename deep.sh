@@ -135,7 +135,10 @@ elif [[ $OPTION == "clean" ]]; then
     sudo mount -t tmpfs -o rw,size=8G tmpfs /mnt/ramdisk
 
     #start clean mosaic
+    if [[ ! -f mosaic/local/bin/activate ]]; then
     virtualenv mosaic
+    fi
+
     source mosaic/bin/activate
 
     python3 deepmosaic.py --media_path "$VIDEOPATH" --model_path 'pretrained_models/pretrained_models/mosaic/clean_youknow_video.pth' \
