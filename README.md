@@ -8,6 +8,17 @@
 **English | [中文](./README_CN.md)**<br>
 You can use it to automatically remove the mosaics in images and videos, or add mosaics to them.<br>This project is based on "semantic segmentation" and "Image-to-Image Translation".<br>Try it at this [website](http://118.89.27.46:5000/)!<br>
 
+
+# Colab-DeepMosaics
+
+## Usage: Simply download `Colab-DeepMosaics.ipynb` and open it inside your Google Drive or click [here](https://colab.research.google.com/github/leohab75/Colab-DeepMosaics/blob/master/Colab-DeepMosaics.ipynb) and copy the file with "File > Save a copy to Drive..." into your Google Drive.
+
+# Info about Colab
+- If you can't open `Colab-DeepMosaics.ipynb` inside your Google Drive, try this [colab link](https://colab.research.google.com/github/leohab75/Colab-DeepMosaics/blob/master/Colab-DeepMosaics.ipynb) and save it to your Google Drive. The "open in Colab"-button can be missing in Google Drive, if that person never used Colab.
+- Google Colab does assign a random GPU. It depends on luck.
+- The Google Colab VM does have a maximum session length of 12 hours. Additionally there is a 30 minute timeout if you leave colab. The VM will be deleted after these timeouts.
+
+
 ### Examples
 
 ![image](./imgs/hand.gif)
