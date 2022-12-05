@@ -224,3 +224,6 @@ nohup.out
 *.exe
 *.out
 *.app
+
+#don't not
+*.ipynb
