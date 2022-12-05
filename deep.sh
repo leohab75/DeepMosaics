@@ -95,7 +95,7 @@ if [[ "$OPTION" == "cut" ]]; then
 
   tmp=$MIN
 
-  if [[ $LONG != "" && $LONG < 60 ]]; then
+  if [[ $LONG != "" && $LONG -lt 60 ]]; then
     set_cut=$LONG
   else
     set_cut=10
