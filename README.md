@@ -120,17 +120,16 @@ python3 deepmosaic.py --media_path ./result/ruoruo_add.jpg --model_path ./pretra
 If you see the error `Please check mosaic_position_model_path!`, check if there is a model file named `mosaic_position.pth` at `./pretrained_models/mosaic/mosaic_position.pth`
 
 #### LINUX based 
+
+install mosaic
+
+```bash
+gdown --folder --id "1cHOk0GUnWoh3V3TEMvm9B4lwJ44M66yw" && mv -r  mosaic/ pretrained_models/ 
+```
+
 я написал скрипт для нарезки видео по 10 мин и запуска отчистки мазаики
 
 I wrote a script to cut a video for 10 minutes and start cleaning the mosaic
-
-
-загрузка модели
-
-```bash
-python3 download_mosaic.py
-```
-
 
 ```bash 
 bash deep.sh
@@ -145,9 +144,24 @@ for reference
 option **-c | --cut** will cut the video, and **-r | --clean** will enable the virtual environment and mount [/mnt/ramdisk](https://en.wikipedia.org/wiki/RAM_drive) to 8 GB
 and run deepmosaic.py with the following options:
 
+
+example: 
 ```bash
-python3 deepmosaic.py --media_path "$VIDEOPATH" --model_path 'pretrained_models/pretrained_models/mosaic/clean_youknow_video.pth' \
-      --result_dir 'result/' --temp_dir '/mnt/ramdisk' --gpu_id 0 --medfilt_num 9
+./deep.sh -c video.mp4 20  => bash deep.sh -c <path_to_video>  <min_int> 
+```
+
+example: 
+```bash
+./deep.sh -r video.mp4  => bash deep.sh -c <path_to_video> 
+```
+
+./deep.sh starts with the following parameters:
+
+./deep.sh запусается со следующими параметрами:
+
+```bash
+gamemoderun python3 deepmosaic.py --media_path "$VIDEOPATH" --model_path 'pretreined_models/mosaic/clean_youknow_video.pth' --temp_dir /mnt/ramdisk/ \
+    --result_dir 'result/' --gpu_id 0 --medfilt_num 7
  ```
 посмотреть,на сколько загружен ramdisk 
 

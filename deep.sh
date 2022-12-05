@@ -13,6 +13,7 @@ if [[ -f $2 ]]; then
   -c | --cut)
     OPTION="cut"
     VIDEOPATH="$2"
+    LONG="$3"
     shift # past argument
     shift # past value
     ;;
@@ -73,10 +74,12 @@ else
 fi
 
 #body script###########################################################################
-time_video=$(ffmpeg -i $VIDEOPATH 2>&1 | grep Duration | awk '{print $2}' | tr -d ,)
-h=$(echo $time_video | cut -f -1 -d :)
-m=$(echo $time_video | cut -f 2 -d :)
+time_video=$(ffmpeg -i "$VIDEOPATH" 2>&1 | grep Duration | awk '{print $2}' | tr -d ,)
+HOUR=$(echo $time_video | cut -f -1 -d :)
+MIN=$(echo $time_video | cut -f 2 -d :)
+tmp=$MIN
 
+#Cut video
 if [[ "$OPTION" == "cut" ]]; then
 
   if [[ ! -d cut_video ]]; then
@@ -88,39 +91,49 @@ if [[ "$OPTION" == "cut" ]]; then
 
   echo -e "$GREEN +++++++++++++ START +++++++++++++++$RESETCOLOR"
 
-  filename=$(echo $VIDEOPATH | rev | cut -f 1 -d '/' | rev)
+  filename=$(echo "$VIDEOPATH" | rev | cut -f 1 -d '/' | rev)
 
-  tmp=$m
+  tmp=$MIN
 
-  for ((i = 1, hour = 0; $h >= 0; i++, hour++, h--)); do
+  if [[ $LONG != "" && $LONG < 60 ]]; then
+    set_cut=$LONG
+  else
+    set_cut=10
+  fi
 
-    if [[ $h -gt 0 ]]; then
-      m=59
+  for ((i = 1, hour = 0; $HOUR >= 0; hour++, HOUR--)); do
+
+    if [[ $HOUR -gt 0 ]]; then
+      MIN=59
     else
-      m=$tmp
+      MIN=$tmp
     fi
 
-    echo -e "$BLUE $hour: часы \t $m: минуты \t dbg_info$RESETCOLOR"
+    for ((t = 60 / set_cut, min = 0; t > 0; t--, i++, min += set_cut)); do
 
-    ffmpeg -i $VIDEOPATH -ss 0$hour:00:00 -t 00:10:00 -c copy cut_video/$i-$filename
-    ((i = i + 1))
-    if [[ $m -gt "10" ]]; then ffmpeg -i $VIDEOPATH -ss 0$hour:10:00 -t 00:10:00 -c copy cut_video/$i-$filename; fi
-    ((i = i + 1))
-    if [[ $m -gt "20" ]]; then ffmpeg -i $VIDEOPATH -ss 0$hour:20:00 -t 00:10:00 -c copy cut_video/$i-$filename; fi
-    ((i = i + 1))
-    if [[ $m -gt "30" ]]; then ffmpeg -i $VIDEOPATH -ss 0$hour:30:00 -t 00:10:00 -c copy cut_video/$i-$filename; fi
-    ((i = i + 1))
-    if [[ $m -gt "40" ]]; then ffmpeg -i $VIDEOPATH -ss 0$hour:40:00 -t 00:10:00 -c copy cut_video/$i-$filename; fi
-    ((i = i + 1))
-    if [[ $m -gt "50" ]]; then ffmpeg -i $VIDEOPATH -ss 0$hour:50:00 -t 00:10:00 -c copy cut_video/$i-$filename; fi
+      if [[ $MIN > $min ]]; then
+
+        echo -e "$RED Cut $i\t| $BLUE 0$hour:$min:00\t| set_cut: $set_cut $RESETCOLOR"
+
+        if [[ $min == 0 ]]; then
+          min=00
+        fi
+        ffmpeg -i $VIDEOPATH -ss 0$hour:$min:00 -t 00:$set_cut:00 -c copy cut_video/$i-$filename
+
+      fi
+
+    done
 
   done
-  echo -e "$GREEN Path:\n\t\t\t$RED cut_video $BLUE"
+
+  echo -e "$GREEN Path:\t\t$RED cut_video $BLUE"
   for i in cut_video/*; do echo -e "\t$i"; done
 
   echo -e "$GREEN\n all files to path $BLUE $(pwd)/cut_video \n$RESETCOLOR"
-
+##Clean mosaic
 elif [[ $OPTION == "clean" ]]; then
+
+  start=$(date | awk '{print $5}')
 
   #I'm use ramdisk in memory on 8gb
   if [[ ! -d /mnt/ramdisk ]]; then
@@ -128,36 +141,25 @@ elif [[ $OPTION == "clean" ]]; then
     echo "mkdir /mnt/ramdisk"
   fi
 
-  #8 gb is about 20 minutes of video, else close
-  if [[ $h == "00" && $m -lt 20 ]]; then
-    start=$(date | awk '{print $5}')
+  sudo mount -t tmpfs -o rw,size=8G tmpfs /mnt/ramdisk
 
-    sudo mount -t tmpfs -o rw,size=8G tmpfs /mnt/ramdisk
+  #start clean mosaic
+  source mosaic/local/bin/activate
 
-    #start clean mosaic
-    if [[ ! -f mosaic/local/bin/activate ]]; then
-    virtualenv mosaic
-    fi
+  gamemoderun python3 deepmosaic.py --media_path "$VIDEOPATH" --model_path 'pretreined_models/mosaic/clean_youknow_video.pth' --temp_dir /mnt/ramdisk/ \
+    --result_dir 'result/' --gpu_id 0 --medfilt_num 7
 
-    source mosaic/bin/activate
+  sudo umount /mnt/ramdisk
+  deactivate
 
-    python3 deepmosaic.py --media_path "$VIDEOPATH" --model_path 'pretrained_models/pretrained_models/mosaic/clean_youknow_video.pth' \
-      --result_dir 'result/' --temp_dir '/mnt/ramdisk' --gpu_id 0 --medfilt_num 9  --no_preview
+  echo -ne "\n$GREEN start: $RED $start"
+  echo -ne "\t$BLUE stop: $RED$(date | awk '{print $5}') $RESETCOLOR\n"
 
-    sudo umount /mnt/ramdisk
-    deactivate
+  echo -e "$GREEN Path:\n\t\t\t$RED result $BLUE"
+  for i in result/*; do echo -e "\t$i"; done
 
-    echo -ne "\n$GREEN start: $RED$start"
-    echo -ne "\t$BLUE stop: $RED$(date | awk '{print $5}') $RESETCOLOR\n"
+  echo -e "\n $RESETCOLOR"
 
-    echo -e "$GREEN Path:\n\t\t\t$RED result $BLUE"
-    for i in result/*; do echo -e "\t$i"; done
-
-    echo -e "\n $RESETCOLOR"
-  else
-
-    echo -e "$RED ERR: time video:$BLUE $time_video > 20m$RESETCOLOR"
-  fi
 fi
 
 exit 0
