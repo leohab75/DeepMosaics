@@ -143,6 +143,26 @@ elif [[ $OPTION == "clean" ]]; then
 
   sudo mount -t tmpfs -o rw,size=8G tmpfs /mnt/ramdisk
 
+  fort="1"
+  while true; do
+
+    clear
+    case $fort in
+    "1")
+      mem_use=$(free -h | awk 'NR==2{print "Total: "$2 "   Use: "$3 "     Free: "$4 "   Доступно: "$7 }')
+      fort="2"
+      ;;
+    "2")
+      mem_use=$(df -h | grep -i ramdisk)
+      fort="1"
+      ;;
+    esac
+    echo -e "$mem_use"
+    echo -e "# $mem_use"
+
+    sleep 10
+  done | zenity --title="RAM" --progress --pulsate --width=500 &
+
   #start clean mosaic
   source mosaic/local/bin/activate
 
